@@ -15,11 +15,11 @@
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:ems="10"
-        android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
         android:id="@+id/email"
-        android:hint="@string/email" />
+        android:hint="@string/email"
+        android:text="ad@min.com" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -31,7 +31,8 @@
         android:layout_alignEnd="@+id/email"
         android:layout_marginTop="11dp"
         android:id="@+id/password"
-        android:hint="@string/password" />
+        android:hint="@string/password"
+        android:text="111111" />
 
     <Button
         android:text="Log In"

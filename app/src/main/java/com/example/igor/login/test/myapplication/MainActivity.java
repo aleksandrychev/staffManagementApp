@@ -1,20 +1,18 @@
 package com.example.igor.login.test.myapplication;
 
+import android.content.Intent;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.content.SharedPreferences;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import com.example.igor.login.test.myapplication.clients.HttpClient;
+import com.example.igor.login.test.myapplication.heplers.PreferenceHelper;
 
-import javax.net.ssl.HttpsURLConnection;
+import org.json.JSONObject;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -23,7 +21,10 @@ public class MainActivity extends AppCompatActivity {
     EditText login;
     EditText password;
     Button loginButton;
-    TextView textLogin;
+
+    SharedPreferences sPref;
+
+    final String tokenKey = "tokenKey";
 
 
     @Override
@@ -33,17 +34,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         login = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
         loginButton = (Button) findViewById(R.id.loginButtong);
-
+        final Intent dashBoardActivity = new Intent(this, InfoActivity.class);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                HttpC
                 try {
-                    String params = login.getText().toString() + password.getText().toString();
-                   HttpClient.sendPost(params);
+                    String params = "email=" + login.getText().toString() + "&password=" + password.getText().toString();
+                   String response = HttpClient.sendPost(params);
+                    JSONObject json = new JSONObject(response);
+
+                    PreferenceHelper.setDefaults(tokenKey,(String) json.get("api_token"),getApplicationContext());
+                    PreferenceHelper.setDefaults("name",(String) json.get("name"),getApplicationContext());
+                    PreferenceHelper.setDefaults("email",(String) json.get("email"),getApplicationContext());
+
+                    System.out.println(json.toString());
+
+                    startActivity(dashBoardActivity);
+
+
                 } catch (Exception ex){
                     ex.printStackTrace();
                 }
@@ -51,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
 
 
 }

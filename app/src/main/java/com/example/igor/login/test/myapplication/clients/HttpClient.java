@@ -1,4 +1,4 @@
-package com.example.igor.login.test.myapplication;
+package com.example.igor.login.test.myapplication.clients;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -44,7 +44,7 @@ public class HttpClient {
     }
 
     // HTTP POST request
-    public static void sendPost(String urlParameters) throws Exception {
+    public static String sendPost(String urlParameters) throws Exception {
 
         String url = "http://staff.aleksandrychev.name/api/v1/auth/login";
         URL obj = new URL(url);
@@ -81,7 +81,7 @@ public class HttpClient {
         in.close();
 
         //print result
-        System.out.println(response.toString());
+        return response.toString();
 
     }
 }
