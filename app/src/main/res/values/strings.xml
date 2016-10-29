@@ -2,8 +2,7 @@
     <string name="app_name">Staff Management</string>
     <string name="email">email</string>
     <string name="password">password</string>
-    <string name="title_activity_task">TaskActivity</string>
-    <string name="title_activity_info">InfoActivity</string>
+    <string name="title_activity_task">Tasks</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
