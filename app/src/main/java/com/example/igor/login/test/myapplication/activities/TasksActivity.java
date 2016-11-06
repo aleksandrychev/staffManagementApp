@@ -2,8 +2,6 @@ package com.example.igor.login.test.myapplication.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -28,23 +26,27 @@ import java.util.List;
 public class TasksActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     List<String> allNames = new ArrayList<>();
+    List<String> ids = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aktivity_tasks);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        if (toolbar != null)
+            setSupportActionBar(toolbar);
+
 
         try {
             String response = HttpClient.getTasks(getApplicationContext());
             JSONObject jsonResponse = new JSONObject(response);
-            ;
+
             JSONArray cast = jsonResponse.getJSONArray("data");
             for (int i = 0; i < cast.length(); i++) {
                 JSONObject actor = cast.getJSONObject(i);
                 String name = actor.getString("name");
                 allNames.add(name);
+                ids.add(actor.getString("id"));
             }
 
         } catch (Exception e) {
@@ -61,13 +63,13 @@ public class TasksActivity extends BaseActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
-               Intent intent = new Intent(TasksActivity.this, OneTaskActivity.class);
-//                String message = "abc";
+                Intent intent = new Intent(TasksActivity.this, OneTaskActivity.class);
+                intent.putExtra("taskId", ids.get(position));
                 startActivity(intent);
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(getDrawerId());
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -84,4 +86,8 @@ public class TasksActivity extends BaseActivity
         }
     }
 
+    @Override
+    protected int getDrawerId() {
+        return R.id.drawer_layout;
+    }
 }

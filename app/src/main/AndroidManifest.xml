@@ -23,8 +23,12 @@
             android:name=".activities.TasksActivity"
             android:label="@string/title_activity_task"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".activities.OneTaskActivity"
-            android:label="Task"></activity>
+            android:label="Task"
+            android:theme="@style/AppTheme.NoActionBar"
+             />
+
     </application>
 
 </manifest>

@@ -117,4 +117,33 @@ public class HttpClient {
         return response.toString();
 
     }
+
+    // HTTP POST request
+    public static String getTask(Context appContext, String id) throws Exception {
+
+
+        String url = "http://staff.aleksandrychev.name/api/v1/task/" + id;
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+        // optional default is GET
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Authorization", "Bearer " + PreferenceHelper.getDefaults("tokenKey", appContext));
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        //print result
+        System.out.println(response.toString());
+        //print result
+        return response.toString();
+
+    }
 }

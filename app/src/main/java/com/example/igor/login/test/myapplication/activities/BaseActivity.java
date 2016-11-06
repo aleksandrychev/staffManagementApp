@@ -17,8 +17,8 @@ import com.example.igor.login.test.myapplication.heplers.PreferenceHelper;
  * Created by igor on 29.10.16.
  */
 
-public class BaseActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+public abstract class BaseActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
 
     TextView headerName;
@@ -27,10 +27,10 @@ public class BaseActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.info, menu);
         getMenuInflater().inflate(R.menu.activity_info_drawer, menu);
-        headerEmail = (TextView)  findViewById(R.id.header_email);
-        headerName = (TextView)  findViewById(R.id.header_name);
+
+        headerEmail = (TextView) findViewById(R.id.header_email);
+        headerName = (TextView) findViewById(R.id.header_name);
 
         headerEmail.setText(PreferenceHelper.getDefaults("email", getApplicationContext()));
         headerName.setText(PreferenceHelper.getDefaults("name", getApplicationContext()));
@@ -38,23 +38,13 @@ public class BaseActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//        MenuItem item = menu.findItem(R.id.log_out);
-
         return super.onCreateOptionsMenu(menu);
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -66,7 +56,8 @@ public class BaseActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.tasks) {
-            // Handle the camera action
+            final Intent taskActivity = new Intent(this, TasksActivity.class);
+            startActivity(taskActivity);
         } else if (id == R.id.edit_profile) {
 
         } else if (id == R.id.log_out) {
@@ -77,9 +68,11 @@ public class BaseActivity extends AppCompatActivity
             startActivity(loginActivity);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(getDrawerId());
         drawer.closeDrawer(GravityCompat.START);
 
         return false;
     }
+
+    protected abstract int getDrawerId();
 }
