@@ -47,22 +47,52 @@
             android:layout_below="@+id/nameTask"
             android:layout_alignParentStart="true"
             android:layout_marginTop="16dp"
-            android:id="@+id/descTask" />
+            android:id="@+id/descTask"
+            android:scrollbars = "vertical"
+            android:maxLines="16"/>
 
         <Button
             android:text="Start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/descTask"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="13dp"
             android:id="@+id/buttonStartTask"
             android:elevation="4dp"
             android:background="@color/greenLight"
             android:textColor="@android:color/background_light"
-            android:onClick="startButtonClick" />
-    </RelativeLayout>
+            android:onClick="startButtonClick"
+            android:visibility="invisible"
+            android:layout_alignBaseline="@+id/buttonFinishTask"
+            android:layout_alignBottom="@+id/buttonFinishTask"
+            android:layout_toStartOf="@+id/buttonFinishTask" />
 
+        <Button
+            android:text="Finish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonFinishTask"
+            android:elevation="4dp"
+            android:background="@color/colorAccent"
+            android:textColor="@android:color/background_light"
+            android:onClick="finishButtonClick"
+            android:visibility="invisible"
+            android:layout_above="@+id/descTask"
+            android:layout_alignParentEnd="true" />
+
+        <Button
+            android:text="Pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonPauseTask"
+            android:elevation="4dp"
+            android:background="@android:color/holo_orange_light"
+            android:textColor="@android:color/background_light"
+            android:onClick="pauseButtonClick"
+            android:visibility="invisible"
+            android:layout_alignBaseline="@+id/buttonStartTask"
+            android:layout_alignBottom="@+id/buttonStartTask"
+            android:layout_toStartOf="@+id/buttonFinishTask"
+            android:layout_marginEnd="19dp" />
+    </RelativeLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
@@ -72,4 +102,5 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_info"
         app:menu="@menu/activity_info_drawer" />
+
 </android.support.v4.widget.DrawerLayout>

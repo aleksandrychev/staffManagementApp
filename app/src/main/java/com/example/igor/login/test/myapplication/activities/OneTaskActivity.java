@@ -8,6 +8,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,6 +24,8 @@ public class OneTaskActivity extends BaseActivity implements NavigationView.OnNa
     TextView name;
     TextView description;
     Button startButton;
+    Button finishButton;
+    Button pauseButton;
     JSONObject taskObject;
 
     @Override
@@ -46,6 +49,10 @@ public class OneTaskActivity extends BaseActivity implements NavigationView.OnNa
         name = (TextView) findViewById(R.id.nameTask);
         description = (TextView) findViewById(R.id.descTask);
         startButton = (Button) findViewById(R.id.buttonStartTask);
+        finishButton = (Button) findViewById(R.id.buttonFinishTask);
+        pauseButton = (Button) findViewById(R.id.buttonPauseTask);
+
+        description.setMovementMethod(new ScrollingMovementMethod());
 
         Intent intent = getIntent();
         String taskId = intent.getStringExtra("taskId");
@@ -55,8 +62,10 @@ public class OneTaskActivity extends BaseActivity implements NavigationView.OnNa
 
             name.setText((String) taskObject.get("name"));
             description.setText((String) taskObject.get("description"));
-            if( taskObject.get("status").equals("in_process")){
+            if (taskObject.get("status").equals("in_process")) {
                 setButtonStopped();
+            } else {
+                setButtonStarted();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,22 +80,42 @@ public class OneTaskActivity extends BaseActivity implements NavigationView.OnNa
     }
 
     public void startButtonClick(View v) throws Exception {
-        if (startButton.getText() == "Start") {
-            setButtonStopped();
-        } else {
-            setButtonStarted();
-            String params = "status=in_process";
-            HttpClient.sendPut("api/v1/task/" + taskObject.get("id"), params, getApplicationContext());
-        }
+        setButtonStopped();
+        String params = "status=in_process";
+        HttpClient.sendPut("api/v1/task/" + taskObject.get("id"), params, getApplicationContext());
 
     }
-    private void setButtonStarted(){
-        startButton.setText("Start");
-        startButton.setBackgroundColor(0xFFFF4081);
+
+    public void finishButtonClick(View v) throws Exception {
+        hideAllButtons();
+        String params = "status=finished";
+        HttpClient.sendPut("api/v1/task/" + taskObject.get("id"), params, getApplicationContext());
+
     }
-    private void setButtonStopped() throws Exception{
-        startButton.setText("Stop");
-        startButton.setBackgroundColor(0xFFFF4081);
+
+    public void pauseButtonClick(View v) throws Exception {
+        setButtonStarted();
+        String params = "status=new";
+        HttpClient.sendPut("api/v1/task/" + taskObject.get("id"), params, getApplicationContext());
+
+    }
+
+    private void setButtonStarted() {
+        startButton.setVisibility(View.VISIBLE);
+        finishButton.setVisibility(View.INVISIBLE);
+        pauseButton.setVisibility(View.INVISIBLE);
+    }
+
+    private void setButtonStopped() throws Exception {
+        startButton.setVisibility(View.INVISIBLE);
+        finishButton.setVisibility(View.VISIBLE);
+        pauseButton.setVisibility(View.VISIBLE);
+    }
+
+    private void hideAllButtons() {
+        startButton.setVisibility(View.INVISIBLE);
+        finishButton.setVisibility(View.INVISIBLE);
+        pauseButton.setVisibility(View.INVISIBLE);
     }
 
 
