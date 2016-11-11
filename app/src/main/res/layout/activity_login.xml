@@ -41,5 +41,6 @@
         android:layout_below="@+id/password"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:id="@+id/loginButtong" />
+        android:id="@+id/loginButtong"
+        android:onClick="loginButtonListener"/>
 </RelativeLayout>

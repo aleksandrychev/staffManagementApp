@@ -38,30 +38,29 @@ public class LoginActivity extends AppCompatActivity {
         login = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
         loginButton = (Button) findViewById(R.id.loginButtong);
-        final Intent taskActivity = new Intent(this, TasksActivity.class);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    String params = "email=" + login.getText().toString() + "&password=" + password.getText().toString();
-                    String response = HttpClient.sendPost(params);
-                    JSONObject json = new JSONObject(response);
 
-                    /**
-                     * set preferences
-                     */
-                    PreferenceHelper.setDefaults(tokenKey,(String) json.get("api_token"),getApplicationContext());
-                    PreferenceHelper.setDefaults("name",(String) json.get("name"),getApplicationContext());
-                    PreferenceHelper.setDefaults("email",(String) json.get("email"),getApplicationContext());
 
-                    startActivity(taskActivity);
+    }
 
-                } catch (Exception ex){
-                    ex.printStackTrace();
-                }
-            }
-        });
+    public void loginButtonListener(View v) {
+        try {
+            final Intent taskActivity = new Intent(this, TasksActivity.class);
+            String params = "email=" + login.getText().toString() + "&password=" + password.getText().toString();
+            String response = HttpClient.sendPost(params);
+            JSONObject json = new JSONObject(response);
 
+            /**
+             * set preferences
+             */
+            PreferenceHelper.setDefaults(tokenKey,(String) json.get("api_token"),getApplicationContext());
+            PreferenceHelper.setDefaults("name",(String) json.get("name"),getApplicationContext());
+            PreferenceHelper.setDefaults("email",(String) json.get("email"),getApplicationContext());
+
+            startActivity(taskActivity);
+
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 
 
