@@ -126,19 +126,16 @@ public class HttpClient {
     }
 
     // HTTP POST request
-    public static String getTasks(Context appContext) throws Exception {
+    public static String getTasks(int page, String status, Context appContext) throws Exception {
 
-        String urlParameters = "";
-        String url = host + "api/v1/task";
+        String urlParameters = "?status="+status+"&page=" + page;
+        String url = host + "api/v1/task" + urlParameters;
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
         // optional default is GET
         con.setRequestMethod("GET");
         con.setRequestProperty("Authorization", "Bearer " + PreferenceHelper.getDefaults("tokenKey", appContext));
-//        int responseCode = con.getResponseCode();
-//        System.out.println("\nSending 'GET' request to URL : " + url);
-//        System.out.println("Response Code : " + responseCode);
 
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream()));
