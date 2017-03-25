@@ -1,20 +1,20 @@
 package com.example.igor.login.test.myapplication.activities;
 
 import android.content.Intent;
+import com.example.igor.login.test.myapplication.activities.TasksActivity;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
-
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import com.example.igor.login.test.myapplication.R;
-import com.example.igor.login.test.myapplication.clients.HttpClient;
 import com.example.igor.login.test.myapplication.heplers.PreferenceHelper;
-
-import org.json.JSONObject;
-
+import com.example.igor.login.test.myapplication.models.api.interfaces.Auth;
+import com.example.igor.login.test.myapplication.models.api.interfaces.responseObjects.AuthResponse;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -26,9 +26,10 @@ public class LoginActivity extends AppCompatActivity {
 
     final String tokenKey = "tokenKey";
 
+    protected Retrofit retrofit;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)  {
+    protected void onCreate(Bundle savedInstanceState) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
@@ -40,30 +41,34 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = (Button) findViewById(R.id.loginButtong);
 
 
+        retrofit = new Retrofit.Builder()
+                .baseUrl("http://staff.aleksandrychev.name/api/v1/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
     }
 
     public void loginButtonListener(View v) {
         try {
-            final Intent taskActivity = new Intent(this, TasksActivity.class);
-            String params = "email=" + login.getText().toString() + "&password=" + password.getText().toString();
-            String response = HttpClient.sendPost(params);
-            JSONObject json = new JSONObject(response);
+            Auth authApi = retrofit.create(Auth.class);
+            Response response = authApi.login(login.getText().toString(), password.getText().toString()).execute();
+            if (response.isSuccessful()) {
+                /**
+                 * set preferences
+                 */
+                AuthResponse responseData = (AuthResponse) response.body();
+                PreferenceHelper.setDefaults("tokenKey", responseData.getData().getApiToken(), getApplicationContext());
+                PreferenceHelper.setDefaults("name", responseData.getData().getName(), getApplicationContext());
+                PreferenceHelper.setDefaults("email", responseData.getData().getEmail(), getApplicationContext());
+                final Intent taskActivity = new Intent(this, TasksActivity.class);
+                startActivity(taskActivity);
+            }
 
-            /**
-             * set preferences
-             */
-            PreferenceHelper.setDefaults(tokenKey,(String) json.get("api_token"),getApplicationContext());
-            PreferenceHelper.setDefaults("name",(String) json.get("name"),getApplicationContext());
-            PreferenceHelper.setDefaults("email",(String) json.get("email"),getApplicationContext());
 
-            startActivity(taskActivity);
-
-        } catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-
-
 
 
 }

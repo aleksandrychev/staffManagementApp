@@ -15,6 +15,10 @@
                 android:icon="@android:drawable/ic_secure"
                 android:title="Edit Profile" />
             <item
+                android:id="@+id/gps_menu"
+                android:icon="@android:drawable/ic_secure"
+                android:title="Gps" />
+            <item
                 android:id="@+id/log_out"
                 android:icon="@drawable/ic_menu_send"
                 android:title="Log Out" />

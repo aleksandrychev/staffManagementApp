@@ -1,7 +1,10 @@
 package com.example.igor.login.test.myapplication.activities;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -23,6 +26,18 @@ public abstract class BaseActivity extends AppCompatActivity
 
     TextView headerName;
     TextView headerEmail;
+    protected Retrofit retrofit;
+
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl("http://staff.aleksandrychev.name/api/v1/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -60,7 +75,11 @@ public abstract class BaseActivity extends AppCompatActivity
             startActivity(taskActivity);
         } else if (id == R.id.edit_profile) {
 
-        } else if (id == R.id.log_out) {
+        }
+        else if (id == R.id.gps_menu) {
+            final Intent gpsActivity = new Intent(this, GpsActivity.class);
+            startActivity(gpsActivity);
+        }else if (id == R.id.log_out) {
             /**
              * @// TODO: 29.10.16 Clear Preference
              */
