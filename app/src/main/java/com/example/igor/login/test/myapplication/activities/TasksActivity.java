@@ -12,21 +12,24 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TabHost;
 import android.widget.Toast;
 
 
 import com.example.igor.login.test.myapplication.R;
-import com.example.igor.login.test.myapplication.clients.HttpClient;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.example.igor.login.test.myapplication.heplers.PreferenceHelper;
+import com.example.igor.login.test.myapplication.models.api.interfaces.Tasks;
+import com.example.igor.login.test.myapplication.models.api.interfaces.responseObjects.tasks.Datum;
+import com.example.igor.login.test.myapplication.models.api.interfaces.responseObjects.tasks.TasksResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class TasksActivity extends BaseActivity
@@ -42,7 +45,7 @@ public class TasksActivity extends BaseActivity
     private ListView tasksListNew, tasksListProcess, taskListFinish;
     private ArrayAdapter<String> adapterNew, adapterProcess, adapterFinish;
     private Map<String, Integer> totalItemsCount = new HashMap<>();
-    private ProgressBar spinner;
+    //    private ProgressBar spinner;
     private TabHost tabHost;
 
     @Override
@@ -52,7 +55,7 @@ public class TasksActivity extends BaseActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null)
             setSupportActionBar(toolbar);
-        spinner = (ProgressBar)findViewById(R.id.progressBar1);
+//        spinner = (ProgressBar) findViewById(R.id.progressBar1);
 
         initTabHost();
         initTasksListNew();
@@ -67,7 +70,7 @@ public class TasksActivity extends BaseActivity
         toggle.syncState();
     }
 
-    private void initTasksListNew(){
+    private void initTasksListNew() {
         tasksListNew = (ListView) findViewById(R.id.tasks_list_new);
         adapterNew = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, allNamesNew);
@@ -90,10 +93,10 @@ public class TasksActivity extends BaseActivity
             public void onScrollStateChanged(AbsListView view, int scrollState) {
 
             }
+
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
-                if(firstVisibleItem+visibleItemCount == totalItemCount && totalItemCount!=0 && totalItemsCount.get("new") != totalItemCount)
-                {
+                if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0 && totalItemsCount.get("new") != totalItemCount) {
 
                     int page = totalItemCount / 10 + 1;
                     /**
@@ -105,7 +108,7 @@ public class TasksActivity extends BaseActivity
         });
     }
 
-    private void initTasksListProcess(){
+    private void initTasksListProcess() {
         tasksListProcess = (ListView) findViewById(R.id.tasks_list_in_process);
         adapterProcess = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, allNamesProcess);
@@ -128,12 +131,14 @@ public class TasksActivity extends BaseActivity
             public void onScrollStateChanged(AbsListView view, int scrollState) {
 
             }
+
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
-                if(firstVisibleItem+visibleItemCount == totalItemCount && totalItemCount!=0 && totalItemsCount.get("in_process") != totalItemCount)
-                {
+
+                if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0 && totalItemsCount.get("in_process") != totalItemCount) {
 
                     int page = totalItemCount / 10 + 1;
+
                     /**
                      * set list view
                      */
@@ -143,7 +148,7 @@ public class TasksActivity extends BaseActivity
         });
     }
 
-    private void initTasksListFinished(){
+    private void initTasksListFinished() {
         taskListFinish = (ListView) findViewById(R.id.tasks_list_in_finished);
         adapterFinish = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, allNamesFinish);
@@ -166,46 +171,55 @@ public class TasksActivity extends BaseActivity
             public void onScrollStateChanged(AbsListView view, int scrollState) {
 
             }
+
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
-                if(firstVisibleItem+visibleItemCount == totalItemCount && totalItemCount!=0 && totalItemsCount.get("finished") != totalItemCount)
-                {
+                if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0 && totalItemsCount.get("finished") != totalItemCount) {
 
                     int page = totalItemCount / 10 + 1;
                     /**
                      * set list view
                      */
                     setTaskViewItems(page, "finished", idsFinished, adapterFinish);
+
                 }
             }
         });
     }
 
 
-    private void setTaskViewItems(int page, String status, List ids, ArrayAdapter adapter){
+    private void setTaskViewItems(int page, final String status, final List ids, final ArrayAdapter adapter) {
 
-        spinner.setVisibility(View.VISIBLE);
+        /**
+         * @// TODO: 4/20/2017 implement Authorization header for all requests
+         */
+        retrofit.create(Tasks.class).getTasks(page, status, "Bearer " + PreferenceHelper.getDefaults("tokenKey", getApplicationContext())).enqueue(new Callback<TasksResponse>() {
+            @Override
+            public void onResponse(Call<TasksResponse> call, Response<TasksResponse> response) {
 
-        try {
-            String response = HttpClient.getTasks(page, status, getApplicationContext());
-            JSONObject jsonResponse = new JSONObject(response);
-            Integer tc = (Integer) jsonResponse.get("total");
-            totalItemsCount.put(status, tc);
 
-            JSONArray cast = jsonResponse.getJSONArray("data");
-            for (int i = 0; i < cast.length(); i++) {
-                JSONObject actor = cast.getJSONObject(i);
-                String name = actor.getString("name");
-                adapter.add(name);
-                ids.add(actor.getString("id"));
+                totalItemsCount.put(status, response.body().getData().getTotal());
+                List<Datum> tasks = response.body().getData().getData();
+
+                for (int i = 0; i < tasks.size(); i++) {
+                    adapter.add(tasks.get(i).getName());
+                    ids.add(tasks.get(i).getId().toString());
+                }
+
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        spinner.setVisibility(View.GONE);
+
+            @Override
+            public void onFailure(Call<TasksResponse> call, Throwable t) {
+                /**
+                 * @TODO: Will be log error
+                 */
+            }
+        });
+
+
     }
 
-    private void initTabHost(){
+    private void initTabHost() {
         tabHost = (TabHost) findViewById(R.id.tasksTabHost);
         tabHost.setup();
         TabHost.TabSpec tabSpec;
@@ -233,11 +247,7 @@ public class TasksActivity extends BaseActivity
         tabSpec.setIndicator("Finished");
         tabSpec.setContent(R.id.tab_finished);
         tabHost.addTab(tabSpec);
-
-        // вторая вкладка будет выбрана по умолчанию
         tabHost.setCurrentTabByTag("new");
-
-        // обработчик переключения вкладок
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             public void onTabChanged(String tabId) {
 //                Toast.makeText(getBaseContext(), "tabId = " + tabId, Toast.LENGTH_SHORT).show();

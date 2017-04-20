@@ -41,7 +41,7 @@ public class HttpClient {
         in.close();
 
         //print result
-        System.out.println(response.toString());
+//        System.out.println(response.toString());
 
     }
 
@@ -79,7 +79,7 @@ public class HttpClient {
             response.append(inputLine);
         }
         in.close();
-        System.out.println(response.toString());
+//        System.out.println(response.toString());
         //print result
         return response.toString();
 
@@ -188,7 +188,7 @@ public class HttpClient {
         in.close();
 
         //print result
-        System.out.println(response.toString());
+//        System.out.println(response.toString());
         //print result
         return response.toString();
 
@@ -217,7 +217,7 @@ public class HttpClient {
         in.close();
 
         //print result
-        System.out.println(response.toString());
+//        System.out.println(response.toString());
         //print result
         return response.toString();
 
