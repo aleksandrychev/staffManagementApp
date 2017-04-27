@@ -96,6 +96,9 @@ public class TasksActivity extends BaseActivity
 
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
+                /**
+                 * @// TODO: 4/20/2017 visible item issue, because on horizontposition it is 3
+                 */
                 if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0 && totalItemsCount.get("new") != totalItemCount) {
 
                     int page = totalItemCount / 10 + 1;
@@ -193,7 +196,7 @@ public class TasksActivity extends BaseActivity
         /**
          * @// TODO: 4/20/2017 implement Authorization header for all requests
          */
-        retrofit.create(Tasks.class).getTasks(page, status, "Bearer " + PreferenceHelper.getDefaults("tokenKey", getApplicationContext())).enqueue(new Callback<TasksResponse>() {
+        retrofit.create(Tasks.class).getTasks(page, status).enqueue(new Callback<TasksResponse>() {
             @Override
             public void onResponse(Call<TasksResponse> call, Response<TasksResponse> response) {
 

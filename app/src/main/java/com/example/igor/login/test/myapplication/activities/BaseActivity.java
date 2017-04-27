@@ -2,6 +2,10 @@ package com.example.igor.login.test.myapplication.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import android.support.annotation.Nullable;
@@ -15,6 +19,7 @@ import android.widget.TextView;
 
 import com.example.igor.login.test.myapplication.R;
 import com.example.igor.login.test.myapplication.heplers.PreferenceHelper;
+import com.example.igor.login.test.myapplication.interceptors.AuthorizationInterceptor;
 
 /**
  * Created by igor on 29.10.16.
@@ -33,9 +38,19 @@ public abstract class BaseActivity extends AppCompatActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        AuthorizationInterceptor interceptor = new AuthorizationInterceptor();
+        interceptor.setContext(getApplicationContext());
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(interceptor)
+                .build();
+
+        /**
+         * @// TODO: 4/27/2017 move url address to xml settings
+         */
         retrofit = new Retrofit.Builder()
                 .baseUrl("http://staff.aleksandrychev.name/api/v1/")
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .build();
     }
 

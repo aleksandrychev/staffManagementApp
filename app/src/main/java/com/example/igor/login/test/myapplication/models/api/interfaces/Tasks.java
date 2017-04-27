@@ -9,5 +9,5 @@ import retrofit2.http.Query;
 
 public interface Tasks {
     @GET("task")
-    Call<TasksResponse> getTasks(@Query("page") int page, @Query("status") String status, @Header("Authorization") String authorization);
+    Call<TasksResponse> getTasks(@Query("page") int page, @Query("status") String status);
 }
