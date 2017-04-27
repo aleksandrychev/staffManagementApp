@@ -13,14 +13,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
-import android.widget.Toast;
 
 
 import com.example.igor.login.test.myapplication.R;
-import com.example.igor.login.test.myapplication.heplers.PreferenceHelper;
 import com.example.igor.login.test.myapplication.models.api.interfaces.Tasks;
-import com.example.igor.login.test.myapplication.models.api.interfaces.responseObjects.tasks.Datum;
-import com.example.igor.login.test.myapplication.models.api.interfaces.responseObjects.tasks.TasksResponse;
+import com.example.igor.login.test.myapplication.responseObjects.tasks.Datum;
+import com.example.igor.login.test.myapplication.responseObjects.tasks.TasksResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;

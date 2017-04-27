@@ -1,7 +1,6 @@
 package com.example.igor.login.test.myapplication.activities;
 
 import android.content.Intent;
-import com.example.igor.login.test.myapplication.activities.TasksActivity;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import com.example.igor.login.test.myapplication.R;
 import com.example.igor.login.test.myapplication.heplers.PreferenceHelper;
 import com.example.igor.login.test.myapplication.models.api.interfaces.Auth;
-import com.example.igor.login.test.myapplication.models.api.interfaces.responseObjects.AuthResponse;
+import com.example.igor.login.test.myapplication.responseObjects.auth.AuthResponse;
 
 public class LoginActivity extends AppCompatActivity {
 

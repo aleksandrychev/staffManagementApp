@@ -1,16 +1,16 @@
-package com.example.igor.login.test.myapplication.models.api.interfaces.responseObjects;
+package com.example.igor.login.test.myapplication.responseObjects.tasks;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AuthResponse {
+public class TasksResponse {
 
     @SerializedName("success")
     @Expose
     private Boolean success;
     @SerializedName("data")
     @Expose
-    private AuthResponseData data;
+    private Data data;
 
     public Boolean getSuccess() {
         return success;
@@ -20,13 +20,12 @@ public class AuthResponse {
         this.success = success;
     }
 
-    public AuthResponseData getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(AuthResponseData data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
 }
-

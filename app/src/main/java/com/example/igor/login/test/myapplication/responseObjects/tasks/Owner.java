@@ -1,10 +1,10 @@
 
-package com.example.igor.login.test.myapplication.models.api.interfaces.responseObjects.tasks;
+package com.example.igor.login.test.myapplication.responseObjects.tasks;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Implementer {
+public class Owner {
 
     @SerializedName("id")
     @Expose

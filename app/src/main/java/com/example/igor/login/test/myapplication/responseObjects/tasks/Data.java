@@ -1,5 +1,5 @@
 
-package com.example.igor.login.test.myapplication.models.api.interfaces.responseObjects.tasks;
+package com.example.igor.login.test.myapplication.responseObjects.tasks;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;

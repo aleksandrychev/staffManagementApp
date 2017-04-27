@@ -4,9 +4,10 @@ import com.example.igor.login.test.myapplication.responseObjects.tasks.TasksResp
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-public interface Tasks {
-    @GET("task")
-    Call<TasksResponse> getTasks(@Query("page") int page, @Query("status") String status);
+public interface Task {
+    @GET("task/{id}")
+    Call<TasksResponse> getTask(@Path("id") int id);
 }

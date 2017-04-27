@@ -22,6 +22,7 @@ public class AuthorizationInterceptor implements Interceptor {
     public Response intercept(Interceptor.Chain chain) throws IOException {
         Request request = chain.request();
         request = request.newBuilder().header("Authorization", "Bearer " + PreferenceHelper.getDefaults("tokenKey", context)).build();
+        System.out.println(request.headers());
         Response response = chain.proceed(request);
 
         return response;

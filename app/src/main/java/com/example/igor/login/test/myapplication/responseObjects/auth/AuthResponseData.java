@@ -1,4 +1,4 @@
-package com.example.igor.login.test.myapplication.models.api.interfaces.responseObjects;
+package com.example.igor.login.test.myapplication.responseObjects.auth;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
