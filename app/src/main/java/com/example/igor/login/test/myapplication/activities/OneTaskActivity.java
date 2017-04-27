@@ -15,9 +15,15 @@ import android.widget.TextView;
 
 import com.example.igor.login.test.myapplication.R;
 import com.example.igor.login.test.myapplication.clients.HttpClient;
-
+import com.example.igor.login.test.myapplication.models.api.interfaces.Task;
+import com.example.igor.login.test.myapplication.responseObjects.task.Data;
+import com.example.igor.login.test.myapplication.responseObjects.task.TaskResponse;
 
 import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class OneTaskActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -55,22 +61,39 @@ public class OneTaskActivity extends BaseActivity implements NavigationView.OnNa
         description.setMovementMethod(new ScrollingMovementMethod());
 
         Intent intent = getIntent();
-        String taskId = intent.getStringExtra("taskId");
+        String taskId = intent.getStringExtra("taskId").toString();
         try {
-            String task = HttpClient.getTask(getApplicationContext(), taskId);
-            taskObject = new JSONObject(task);
+            retrofit.create(Task.class).getTask(taskId).enqueue(new Callback<TaskResponse>() {
+                @Override
+                public void onResponse(Call<TaskResponse> call, Response<TaskResponse> response) {
 
-            name.setText((String) taskObject.get("name"));
-            description.setText((String) taskObject.get("description"));
-            if (taskObject.get("status").equals("in_process")) {
-                setButtonStopped();
-            } else {
-                setButtonStarted();
-            }
+                    Data task = response.body().getData();
+
+                    name.setText(task.getName());
+                    description.setText(task.getDescription());
+                    if (task.getStatus().equals("in_process")) {
+                        try {
+                            setButtonStopped();
+                        }catch (Exception e){
+
+                        }
+                    } else {
+                        setButtonStarted();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<TaskResponse> call, Throwable t) {
+                    /**
+                     * @TODO: Will be log error
+                     */
+                }
+            });
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(getDrawerId());
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -79,24 +102,25 @@ public class OneTaskActivity extends BaseActivity implements NavigationView.OnNa
         toggle.syncState();
     }
 
+    /** @// TODO: 4/27/2017 change status to retofit2 **/
     public void startButtonClick(View v) throws Exception {
         setButtonStopped();
         String params = "status=in_process";
-        HttpClient.sendPut("api/v1/task/" + taskObject.get("id"), params, getApplicationContext());
+//        HttpClient.sendPut("api/v1/task/" + taskObject.get("id"), params, getApplicationContext());
 
     }
 
     public void finishButtonClick(View v) throws Exception {
         hideAllButtons();
         String params = "status=finished";
-        HttpClient.sendPut("api/v1/task/" + taskObject.get("id"), params, getApplicationContext());
+//        HttpClient.sendPut("api/v1/task/" + taskObject.get("id"), params, getApplicationContext());
 
     }
 
     public void pauseButtonClick(View v) throws Exception {
         setButtonStarted();
         String params = "status=new";
-        HttpClient.sendPut("api/v1/task/" + taskObject.get("id"), params, getApplicationContext());
+//        HttpClient.sendPut("api/v1/task/" + taskObject.get("id"), params, getApplicationContext());
 
     }
 

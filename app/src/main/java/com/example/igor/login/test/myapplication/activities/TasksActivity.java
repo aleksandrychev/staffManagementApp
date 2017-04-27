@@ -191,9 +191,6 @@ public class TasksActivity extends BaseActivity
 
     private void setTaskViewItems(int page, final String status, final List ids, final ArrayAdapter adapter) {
 
-        /**
-         * @// TODO: 4/20/2017 implement Authorization header for all requests
-         */
         retrofit.create(Tasks.class).getTasks(page, status).enqueue(new Callback<TasksResponse>() {
             @Override
             public void onResponse(Call<TasksResponse> call, Response<TasksResponse> response) {
